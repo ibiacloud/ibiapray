@@ -1,0 +1,10 @@
+---
+- name: Check ansible version
+  import_playbook: ansible_version.yml
+
+- name: Install bastion ssh config
+  hosts: bastion[0]
+  gather_facts: False
+  environment: "{{ proxy_disable_env }}"
+  roles:
+    - { role: bastion-ssh-config, tags: ["localhost", "bastion"] }

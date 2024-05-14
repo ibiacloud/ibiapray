@@ -1,0 +1,35 @@
+# ca hash
+kubeadm_ca_hash: "xxx"
+
+# kubeadm token create output
+kubeadm_token: "yyy"
+
+apiserver_loadbalancer_domain_name: "cloud-us-east-1.example.com"
+loadbalancer_apiserver_address: "127.0.0.1"
+
+# disable_host_nameservers: false
+## Deploy container engine
+# Set false if you want to deploy container engine manually.
+# deploy_container_engine: false
+
+# container_manager: containerd
+ping_access_ip: false
+registry_host: registry.example.com
+
+# 以上所有内容都是需要配置的
+
+# an unique username that means who has this nodes
+node_owner: "{{user_id}}"
+
+override_system_hostname: false
+
+containerd_registries_mirrors:
+ - prefix: "{{registry_host}}"
+   mirrors:
+    - host: "http://{{registry_host}}"
+      capabilities: ["pull", "resolve"]
+      skip_verify: true
+
+loadbalancer_apiserver:
+  address: "{{loadbalancer_apiserver_address}}"
+  port: 6443
