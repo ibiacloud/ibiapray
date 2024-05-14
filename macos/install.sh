@@ -67,6 +67,6 @@ EOF
 limactl start --containerd none /tmp/${APP}.yaml
 
 if [ -z "$(cat ~/.bashrc|grep ${APP})" ];then
-  echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'"
+  echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'" >> ~/.bashrc
   source ~/.bashrc
 fi
