@@ -96,3 +96,9 @@
 
     Or remove node from our [Cloud](https://cloud.ibia.ai/me/nodes).
 
+
+## For Macos
+
+```sh
+curl -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/macos/install.sh | bash -s --  'aws' 'xxx' 'xxx' 'cloud-us-east-1.example.com' '127.0.0.1' 'registry.example.com'
+```

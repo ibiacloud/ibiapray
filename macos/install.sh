@@ -1,5 +1,7 @@
 #!/bin/bash
 
+APP=ibiacloud
+
 user_id=${1:-"anonymous"}
 kubeadm_ca_hash=${2}
 kubeadm_token=${3}
@@ -12,7 +14,12 @@ if [ -z "$(which limactl)" ];then
   brew update && brew install lima
 fi
 
-cat << EOF > /tmp/ibiacloud.yaml
+if [ -n "$(limactl list -q ${APP})" ];then
+  limactl stop ${APP} || true
+  limactl delete ${APP} 
+fi
+
+cat << EOF > /tmp/${APP}.yaml
 # This template requires Lima v0.7.0 or later.
 images:
 # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
@@ -33,25 +40,34 @@ mounts: []
 containerd:
   system: false
   user: false
-  
-provision:
-- mode: system
-  script: |
-    sudo apt-get update && sudo apt-get install -y ansible python3 python3-pip python3.12-venv wget
-    python3 -m venv ibiapray-venv
-    source ibiapray-venv/bin/activate
-    wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
-    tar zxvf v1.0.0.tar.gz
-    cd ibiapray && pip install -U -r requirements.txt
-    ansible-playbook -i inventory/sample/inventory.ini \
-      -b -v \
-      -e 'kubeadm_ca_hash=${kubeadm_ca_hash}' \
-      -e 'kubeadm_token=${kubeadm_token}' \
-      -e 'user_id=${user_id}' \
-      -e 'apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}' \
-      -e 'loadbalancer_apiserver_address=${loadbalancer_apiserver_address}' \
-      -e 'registry_host=${registry_host}' \
-      cluster.yaml
+portForwards:
+- guestSocket: "/run/user/{{.UID}}/containerd.sock"
+  hostSocket: "{{.Dir}}/sock/containerd.sock"
+- guestPort: 80
+  hostPort: 9080
+# provision:
+# - mode: system
+#   script: |
+#     sudo apt-get update && sudo apt-get install -y ansible python3 python3-pip python3.12-venv wget
+#     cd /tmp
+#     python3 -m venv ibiapray-venv
+#     source ibiapray-venv/bin/activate
+#     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
+#     tar zxvf v1.0.0.tar.gz
+#     cd ibiapray && pip install -U -r requirements.txt
+#     ansible-playbook -i inventory/sample/inventory.ini \
+#       -b -v \
+#       -e 'kubeadm_ca_hash=${kubeadm_ca_hash}' \
+#       -e 'kubeadm_token=${kubeadm_token}' \
+#       -e 'user_id=${user_id}' \
+#       -e 'apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}' \
+#       -e 'loadbalancer_apiserver_address=${loadbalancer_apiserver_address}' \
+#       -e 'registry_host=${registry_host}' \
+#       cluster.yaml
 EOF
 
-limactl start --containerd none /tmp/ibiacloud.yaml
+limactl start --containerd none /tmp/${APP}.yaml
+
+if [ -z "$(cat ~/.bashrc|grep ${APP})" ];then
+  echo "alias ${APP}='limactl shell '"
+fi
