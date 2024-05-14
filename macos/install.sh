@@ -23,7 +23,7 @@ cat << EOF > /tmp/${APP}.yaml
 # This template requires Lima v0.7.0 or later.
 images:
 # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
-- location: "http://127.0.0.1:8080/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+- location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
   arch: "x86_64"
   # digest: "sha256:da76b0ef1cd45939f0d14ca11dd4dfabbe13b94d2ec144d54c805d1baf852e67"
 - location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-arm64.img"
