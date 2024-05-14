@@ -102,3 +102,18 @@
 ```sh
 curl -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/macos/install.sh | bash -s --  'aws' 'xxx' 'xxx' 'cloud-us-east-1.example.com' '127.0.0.1' 'registry.example.com'
 ```
+
+Or 
+
+```sh
+brew update && brew install lima
+limactl start ibiacloud template:ubuntu
+limactl shell ibiacloud
+sudo apt-get update && sudo apt-get install -y ansible python3 python3-pip python3-venv wget
+python3 -m venv ibiapray-venv
+source ibiapray-venv/bin/activate
+wget https://github.com/ibiacloud/ibiapray/archive/refs/tags/v1.0.0.tar.gz
+tar zxvf v1.0.0.tar.gz
+cd ibiapray && pip install -U -r requirements.txt
+ansible-playbook -i inventory/sample/inventory.ini -b -v -e 'kubeadm_ca_hash=xxxx' -e 'kubeadm_token=yyy' -e 'user_id=xxx' cluster.yaml
+```
