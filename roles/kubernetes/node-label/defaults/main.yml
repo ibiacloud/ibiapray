@@ -1,0 +1,6 @@
+# 节点标签
+node_labels:
+  # 节点提供者
+  node.kubernetes.io/provider: "{{node_owner}}"
+  # 部署模式, cluster, standalone
+  topology.kubernetes.io/deploy_model: "{% if groups['all'] |length > 1 %}standalone{%else%}cluster{%endif%}"
