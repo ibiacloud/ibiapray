@@ -56,6 +56,7 @@ serverTLSBootstrap: true
 {% set kubelet_cluster_dns = [] %}
 {% endif %}
 clusterDNS:
+- 8.8.8.8
 {% for dns_address in kubelet_cluster_dns %}
 - {{ dns_address }}
 {% endfor %}
