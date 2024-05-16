@@ -33,3 +33,7 @@ containerd_registries_mirrors:
 loadbalancer_apiserver:
   address: "{{loadbalancer_apiserver_address}}"
   port: 6443
+
+
+# node_labels:
+  # node.kubernetes.io/macos: {% if %}
