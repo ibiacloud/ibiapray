@@ -100,7 +100,7 @@
 ## For Macos
 
 ```sh
-curl -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/scripts/install.sh | bash -s --  'aws' 'xxx' 'xxx' 'cloud-us-east-1.example.com' '127.0.0.1' 'registry.example.com'
+curl -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/scripts/macos_install.sh | bash -s --  'aws' 'xxx' 'xxx' 'cloud-us-east-1.example.com' '127.0.0.1' 'registry.example.com'
 ```
 
 Or 
