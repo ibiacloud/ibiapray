@@ -1,8 +1,7 @@
----
 ## Global Offline settings
 ### Private Container Image Registry
 # registry_host: "myprivateregisry.com"
-files_repo: "http://127.0.0.1:8080"
+# files_repo: "http://127.0.0.1:8080"
 ### If using CentOS, RedHat, AlmaLinux or Fedora
 # yum_repo: "http://myinternalyumrepo"
 ### If using Debian
