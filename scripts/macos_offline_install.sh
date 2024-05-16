@@ -65,23 +65,27 @@ provision:
     EOF
 
     sudo apt-get update && sudo apt-get install -y ansible python3 wget
-    cd /tmp
     sudo apt-get install -y python3-pip
     python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+- mode: system
+  script: |
+    cd /tmp
     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
     tar zxvf v1.0.0.tar.gz
     cd ibiapray && pip install -U -r requirements.txt
     curl -o inventory/sample/group_vars/all/offline.yml -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/scripts/offline.yml
+    export HOME=/home/$(whoami).linux
     ansible-playbook -i inventory/sample/inventory.ini \
       -b -v \
-      -e 'kubeadm_ca_hash=${kubeadm_ca_hash}' \
-      -e 'kubeadm_token=${kubeadm_token}' \
-      -e 'user_id=${user_id}' \
-      -e 'apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}' \
-      -e 'loadbalancer_apiserver_address=${loadbalancer_apiserver_address}' \
-      -e 'registry_host=${registry_host}' \
-      -e 'files_repo=http://host.lima.internal:8080' \
+      -e "kubeadm_ca_hash=${kubeadm_ca_hash}" \
+      -e "kubeadm_token=${kubeadm_token}" \
+      -e "user_id=${user_id}" \
+      -e "apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}" \
+      -e "loadbalancer_apiserver_address=${loadbalancer_apiserver_address}" \
+      -e "registry_host=${registry_host}" \
+      -e "files_repo=http://host.lima.internal:8080" \
       cluster.yml
 EOF
 
