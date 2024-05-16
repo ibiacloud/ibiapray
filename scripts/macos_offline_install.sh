@@ -23,10 +23,10 @@ cat << EOF > /tmp/${APP}.yaml
 # This template requires Lima v0.7.0 or later.
 images:
 # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
-- location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+- location: "http://127.0.0.1:8080/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
   arch: "x86_64"
   # digest: "sha256:1718f177dde4c461148ab7dcbdcf2f410c1f5daa694567f6a8bbb239d864b525"
-- location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-arm64.img"
+- location: "http://127.0.0.1:8080/releases/22.04/release/ubuntu-22.04-server-cloudimg-arm64.img"
   arch: "aarch64"
   # digest: "sha256:f6bf7305207a2adb9a2e2f701dc71f5747e5ba88f7b67cdb44b3f5fa6eea94a3"
 # Fallback to the latest release image.
@@ -46,9 +46,29 @@ portForwards:
 provision:
 - mode: system
   script: |
+    cat << EOF > /etc/apt/sources.list
+    # 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+    deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+    deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+    deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+    # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+
+    # 以下安全更新软件源包含了官方源与镜像站配置，如有需要可自行修改注释切换
+    deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+    # deb-src http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+
+    # 预发布软件源，不建议启用
+    # deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-proposed main restricted universe multiverse
+    # # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-proposed main restricted universe multiverse
+    EOF
+
     sudo apt-get update && sudo apt-get install -y ansible python3 wget
     cd /tmp
     sudo apt-get install -y python3-pip
+    python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
     tar zxvf v1.0.0.tar.gz
     cd ibiapray && pip install -U -r requirements.txt

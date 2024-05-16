@@ -7,7 +7,7 @@ apiserver_loadbalancer_domain_name=${4}
 loadbalancer_apiserver_address=${5}
 registry_host=${6}
 
-sudo apt-get update && sudo apt-get install -y ansible python3 python3-pip python3.12-venv wget
+sudo apt-get update && sudo apt-get install -y ansible python3 python3-pip python3-venv wget
 cd /tmp
 python3 -m venv ibiapray-venv
 source ibiapray-venv/bin/activate
@@ -22,4 +22,4 @@ ansible-playbook -i inventory/sample/inventory.ini \
     -e "apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}" \
     -e "loadbalancer_apiserver_address=${loadbalancer_apiserver_address}" \
     -e "registry_host=${registry_host}" \
-    cluster.yaml
+    cluster.yml
