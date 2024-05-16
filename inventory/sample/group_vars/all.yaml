@@ -37,4 +37,4 @@ loadbalancer_apiserver:
 # files_repo: http://127.0.0.1:8080
 
 # node_labels:
-  # node.kubernetes.io/macos: {% if %}
+  # node.kubernetes.io/macos: 
