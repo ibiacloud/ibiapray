@@ -41,6 +41,8 @@ containerd:
   system: false
   user: false
 portForwards:
+- guestPortRange: [30000, 32767]
+  hostPortRange: [30000, 32767]
 - guestPort: 80
   hostPort: 9080
 provision:
