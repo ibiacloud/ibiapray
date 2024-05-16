@@ -41,11 +41,12 @@ containerd:
   system: false
   user: false
 portForwards:
-- guestPort: 80
-  hostPort: 9080
+- guestPortRange: [30000, 32767]
+  # hostPort: 9080
 provision:
 - mode: system
   script: |
+    [ -f /init-done ] && exit 0
     cat << EOF > /etc/apt/sources.list
     # 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
     deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
@@ -69,8 +70,7 @@ provision:
     python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
-- mode: system
-  script: |
+    # only start one
     cd /tmp
     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
     tar zxvf v1.0.0.tar.gz
@@ -87,6 +87,7 @@ provision:
       -e "registry_host=${registry_host}" \
       -e "files_repo=http://host.lima.internal:8080" \
       cluster.yml
+    touch /init-done
 EOF
 
 limactl start --containerd none /tmp/${APP}.yaml
