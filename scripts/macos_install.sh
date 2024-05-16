@@ -46,12 +46,14 @@ portForwards:
 provision:
 - mode: system
   script: |
+    [ -f /init-done ] && exit 0
     sudo apt-get update && sudo apt-get install -y ansible python3 wget
     cd /tmp
     sudo apt-get install -y python3-pip
     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
     tar zxvf v1.0.0.tar.gz
     cd ibiapray && pip install -U -r requirements.txt
+    export HOME=/home/$(whoami).linux
     ansible-playbook -i inventory/sample/inventory.ini \
       -b -v \
       -e 'kubeadm_ca_hash=${kubeadm_ca_hash}' \
@@ -61,6 +63,7 @@ provision:
       -e 'loadbalancer_apiserver_address=${loadbalancer_apiserver_address}' \
       -e 'registry_host=${registry_host}' \
       cluster.yml
+    touch /init-done
 EOF
 
 limactl start --containerd none /tmp/${APP}.yaml
