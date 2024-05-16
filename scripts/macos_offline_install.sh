@@ -80,6 +80,7 @@ provision:
       -e 'apiserver_loadbalancer_domain_name=${apiserver_loadbalancer_domain_name}' \
       -e 'loadbalancer_apiserver_address=${loadbalancer_apiserver_address}' \
       -e 'registry_host=${registry_host}' \
+      -e 'files_repo=http://host.lima.internal:8080' \
       cluster.yml
 EOF
 
