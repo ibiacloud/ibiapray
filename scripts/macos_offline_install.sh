@@ -72,6 +72,7 @@ provision:
     wget https://github.com/ibiacloud/ibiapray/releases/download/v1.0.0/v1.0.0.tar.gz
     tar zxvf v1.0.0.tar.gz
     cd ibiapray && pip install -U -r requirements.txt
+    curl -o inventory/sample/group_vars/all/offline.yml -s https://raw.githubusercontent.com/ibiacloud/ibiapray/develop/scripts/offline.yml
     ansible-playbook -i inventory/sample/inventory.ini \
       -b -v \
       -e 'kubeadm_ca_hash=${kubeadm_ca_hash}' \
