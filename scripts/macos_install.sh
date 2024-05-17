@@ -85,4 +85,4 @@ if [ -n "$(cat ${shell_file}|grep ${APP})" ];then
    sed -i "/^alias ${APP}=/d" ${shell_file} 
 fi
 
-echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'" >> ${shell_file}
+echo "alias ${APP}='limactl shell ${APP}" >> ${shell_file}

@@ -50,6 +50,7 @@ provision:
   script: |
     [ -f /init-done ] && exit 0
     # cat << EOF > /etc/apt/sources.list
+    # arm包无法使用清华源
     # # 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
     # deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
     # # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
@@ -109,4 +110,4 @@ if [ -n "$(cat ${shell_file}|grep ${APP})" ];then
    sed -i "/^alias ${APP}=/d" ${shell_file} 
 fi
 
-echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'" >> ${shell_file}
+echo "alias ${APP}='limactl shell ${APP}" >> ${shell_file}
