@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 APP=ibiacloud
 
@@ -70,9 +70,19 @@ EOF
 
 limactl start --containerd none /tmp/${APP}.yaml
 
-if [ -z "$(cat ~/.bashrc|grep ${APP})" ];then
-  echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'" >> ~/.bashrc
-  source ~/.bashrc
+if [ $? -ne 0 ];then
+  echo "start fail"
+  exit 1
 fi
 
-rm -rf /tmp/${APP}.yaml
+shell_file="~/.bashrc"
+
+if [ "$(basename ${SHELL})" == "zsh" ];then
+  shell_file="~/.zshrc"
+fi
+
+if [ -n "$(cat ${shell_file}|grep ${APP})" ];then
+   sed -i "/^alias ${APP}=/d" ${shell_file} 
+fi
+
+echo "alias ${APP}='limactl shell ${APP} sudo nerdctl --address unix:///var/run/containerd/containerd.sock'" >> ${shell_file}
